@@ -1,7 +1,6 @@
 # postgres-restore-s3
 
-Restore a SQL backup from S3 to PostgresSQL
-> This repository is a clone of [dockerfiles/postgres-restore-s3/](https://github.com/schickling/dockerfiles/tree/master/postgres-restore-s3). I added support for AWS Endpoint URL, for S3 Compliant APIs such as minio and also will maintain it.
+Restore a SQL backup from S3 to PostgresSQL.
 
 ## Warning
 
@@ -25,3 +24,6 @@ $ docker run -e S3_ACCESS_KEY_ID=key -e S3_SECRET_ACCESS_KEY=secret -e S3_BUCKET
 ## Dropping public
 
 If you wish to drop the public schema (drop schema public cascade; create schema public) then set the environment variable DROP_PUBLIC=yes. This is useful for situations where you wish to restore a database which currently has data / schemas in it.
+
+## Acknowledges
+- This project was initially cloned from [dockerfiles/postgres-restore-s3/](https://github.com/schickling/dockerfiles/tree/master/postgres-restore-s3).

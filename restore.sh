@@ -72,9 +72,25 @@ if [ "${DROP_PUBLIC}" == "yes" ]; then
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema public cascade; create schema public;"
 fi
 
+
+if [ "${DROP_AND_RECREATE_DB}" == "yes" ]; then
+	echo "Recreating the db"
+  UPDATE pg_database SET datallowconn = 'false' WHERE datname = "$POSTGRES_DATABASE";
+
+  SELECT pg_terminate_backend(pg_stat_activity.pid)
+  FROM pg_stat_activity
+  WHERE pg_stat_activity.datname = "$POSTGRES_DATABASE";
+
+  DROP DATABASE $POSTGRES_DATABASE;
+
+  CREATE DATABASE $POSTGRES_DATABASE;
+
+  GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DATABASE TO $POSTGRES_USER;
+fi
+
 echo "Restoring ${LATEST_BACKUP}"
 
 psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
 
-echo "Restore complete"
+echo "Restore completed"
 
