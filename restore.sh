@@ -73,7 +73,7 @@ if [ "${DROP_PUBLIC}" == "yes" ]; then
 fi
 
 
-if [ "${DROP_AND_RECREATE_DB}" == "yes" ]; then
+if [ "${DROP_AND_RECREATE_DATABASE}" == "yes" ]; then
 	echo "Recreating the db"
   UPDATE pg_database SET datallowconn = 'false' WHERE datname = "$POSTGRES_DATABASE";
 
