@@ -15,8 +15,9 @@ ENV S3_BUCKET **None**
 ENV S3_REGION us-west-1
 ENV S3_PATH 'backup'
 ENV DROP_PUBLIC 'no'
-ENV DROP_AND_RECREATE_DATABASE 'no'
+ENV SCHEDULE **None**
 
+ADD run.sh run.sh
 ADD restore.sh restore.sh
 
-CMD ["sh", "restore.sh"]
+CMD ["sh", "run.sh"]
