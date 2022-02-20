@@ -2,8 +2,6 @@
 
 set -e
 
-echo $SCHEDULE
-
 dump_sql_gz="dump.sql.gz"
 dump_sql="dump.sql"
 
@@ -18,6 +16,8 @@ if [ -f "$dump_sql" ]; then
 fi
 
 if [ "${SCHEDULE}" = "**None**" ]; then
+  echo $SCHEDULE
+
   sh restore.sh
 else
   exec go-cron "$SCHEDULE" /bin/sh restore.sh
