@@ -58,14 +58,28 @@ export AWS_DEFAULT_REGION=$S3_REGION
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER"
 
+
+dump_sql_gz="dump.sql.gz"
+dump_sql="dump.sql"
+
+if [ -f "$dump_sql_gz" ]; then
+  echo "Removing previous dump file ($dump_sql_gz)"
+  rm "$dump_sql_gz"
+fi
+
+if [ -f "$dump_sql" ]; then
+  echo "Removing previous dump file ($dump_sql)"
+  rm "$dump_sql"
+fi
+
 echo "Finding latest backup"
 
 LATEST_BACKUP=$(aws $AWS_ARGS s3 ls s3://$S3_BUCKET/$S3_PREFIX/ | sort | tail -n 1 | awk '{ print $4 }')
 
 echo "Fetching ${LATEST_BACKUP} from S3"
 
-aws $AWS_ARGS s3 cp s3://$S3_BUCKET/$S3_PREFIX/${LATEST_BACKUP} dump.sql.gz
-gzip -d dump.sql.gz
+aws $AWS_ARGS s3 cp s3://$S3_BUCKET/$S3_PREFIX/${LATEST_BACKUP} $dump_sql_gz
+gzip -d $dump_sql_gz
 
 if [ "${DROP_PUBLIC}" == "yes" ]; then
 	echo "Recreating the public schema"
@@ -74,6 +88,6 @@ fi
 
 echo "Restoring ${LATEST_BACKUP}"
 
-psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
+psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < $dump_sql
 
 echo "Restore complete"
