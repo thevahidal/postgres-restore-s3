@@ -72,10 +72,8 @@ if [ "${DROP_PUBLIC}" == "yes" ]; then
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema public cascade; create schema public;"
 fi
 
-
 echo "Restoring ${LATEST_BACKUP}"
 
 psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
 
-echo "Restore completed"
-
+echo "Restore complete"
